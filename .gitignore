@@ -1,8 +1,9 @@
 
 # VS Code ignores
 **/.pytest_cache
+*.pyc
 
 # Distribution ignores
 **/build
 **/dist
-**/systemrobustness_cameronmcphail.egg-info
+**/*.egg-info

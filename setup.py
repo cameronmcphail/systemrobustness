@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="systemrobustness-cameronmcphail",
+    name="systemrobustness",
     version="0.0.1",
     author="Cameron McPhail",
     author_email="cameron.mcphail@adelaide.edu.au",
