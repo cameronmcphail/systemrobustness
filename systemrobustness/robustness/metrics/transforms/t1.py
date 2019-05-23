@@ -26,6 +26,8 @@ def identity(f, maximise=True):
         and n scenarios.
     maximise : bool
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
@@ -49,6 +51,8 @@ def regret_from_best_da(f, maximise=True):
         and n scenarios.
     maximise : bool
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
@@ -76,9 +80,12 @@ def regret_from_values(f, values, maximise=True):
         Performance values, f, for m decision alternatives
         and n scenarios.
     values : np.ndarray, shape=(n, )
-        The values to compare the performance values to
+        The values to compare the performance values to. i.e. The
+        values you would regret not getting, relative to f.
     maximise : bool
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
@@ -110,6 +117,8 @@ def regret_from_median(f, maximise=True):
         and n scenarios.
     maximise : bool
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
@@ -131,10 +140,18 @@ def satisfice(f, maximise=True, threshold=0.0, accept_equal=True):
     f : np.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    threshold : float
+    maximise : bool
+        Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
+    threshold : float, optional
         A minimum value where f >= threshold to be satisficed
-    accept_equal : bool
-        Changes the condition to > if False
+        (The default is 0.0, which implies that any f value above 0 is
+        of satisfactory performance).
+    accept_equal : bool, optional
+        Whether or not an f value equal to the threshold is acceptable.
+        (The default is True, which implies a >= comparison, whereas
+        False would imply a > comparison).
 
     Returns
     -------

@@ -113,9 +113,12 @@ def quantiles(f, quantiles):
     f : np.ndarray, shape=(m, n)
         Transformed performance values to be maximised.
         m decision alternatives and n scenarios
-    quantiles : np.ndarray, shape=(n', )
-        Which quantiles to select for each decision alternative
-        e.g. [0.25, 0.75]
+    quantiles : np.ndarray, shape=(n', ), dtype=float
+        Which quantile of to select for each decision alternative.
+        E.g. [0.2, 0.75] would get the 20th and 75th percentiles for
+        each decision alternative. That is to say, the f values for
+        each decision alternative where 20% and 75% of values are
+        worse.
 
     Returns
     -------

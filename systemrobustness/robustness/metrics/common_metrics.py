@@ -27,15 +27,17 @@ def maximin(f, maximise=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.identity(f, maximise=maximise)
@@ -57,15 +59,17 @@ def maximax(f, maximise=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.identity(f, maximise=maximise)
@@ -96,17 +100,21 @@ def hurwicz(f, maximise=True, alpha=0.5):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
-    alpha : float
-        The weighting to place on the worst-case scenario
+        (The default is True, which implies high values of f are better
+        than low values of f).
+    alpha : float, optional
+        The weighting to place on the worst-case scenario.
+        (The default is 0.5, which implies an equal weighting of the
+        best- and worst-case scenarios).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     # Define the weights for the worst- and best-cases.
@@ -135,15 +143,17 @@ def laplace(f, maximise=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.identity(f, maximise=maximise)
@@ -176,15 +186,17 @@ def minimax_regret(f, maximise=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.regret_from_best_da(f, maximise=maximise)
@@ -193,17 +205,18 @@ def minimax_regret(f, maximise=True):
     return R
 
 
-def quantile_regret(f, maximise=True, quantile=0.9):
-    """Laplace's Principle of Insufficient Reason
+def quantile_regret(f, maximise=True, quantile=0.1):
+    """Quantile regret metric
 
-    The 90th percentile minimax regret metric (Herman et al., 2015) is
-    a variant of the minimax metric (Savage, 1951) that was discussed
-    previously. Regret, is calculated using the same transformation as
-    the minimax regret metric, and thus this metric also is used to
-    compare two or more decision alternatives rather than only looking
-    at an individual decision alternative. The expected amount of
-    regret for decision alternative 𝑥𝑖 is calculated using the kth
-    quantile of regret rather than the maximum possible regret.
+    This is derived from the 90th percentile minimax regret metric
+    (Herman et al., 2015) which itself is a variant of the minimax
+    metric (Savage, 1951) that was discussed previously. Regret is
+    calculated using the same transformation as the minimax regret
+    metric, and thus this metric also is used to compare two or more
+    decision alternatives rather than only looking at an individual
+    decision alternative. The expected amount of regret for decision
+    alternative x_i is calculated using the kth quantile of regret
+    rather than the maximum possible regret.
 
     This metric is thus more sensitive to the overall distribution of
     the performance when compared to the minimax regret metric.
@@ -217,17 +230,22 @@ def quantile_regret(f, maximise=True, quantile=0.9):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
-    quantile : float
-        Which quantile of regret values to use
+        (The default is True, which implies high values of f are better
+        than low values of f).
+    quantile : float, optional
+        Which quantile of regret values to use.
+        (The default is 0.1, which implies the use of the 10th
+        percentile. That is the f value at which only 10% of f values
+        (for a decision alternative) are worse).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.regret_from_best_da(f, maximise=maximise)
@@ -257,15 +275,17 @@ def mean_variance(f, maximise=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.identity(f, maximise=maximise)
@@ -288,15 +308,17 @@ def undesirable_deviations(f, maximise=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     # Do identity first, before regret, so that correct percentiles
@@ -321,15 +343,17 @@ def quantile_skew(f, maximise=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.identity(f, maximise=maximise)
@@ -356,15 +380,17 @@ def quantile_kurtosis(f, maximise=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.identity(f, maximise=maximise)
@@ -391,19 +417,25 @@ def starrs_domain(f, maximise=True, threshold=0.0, accept_equal=True):
 
     Parameters
     ----------
-    f : np.ndarray, shape=(m, n)
+    f : numpy.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    maximise : bool
+    maximise : bool, optional
         Is the performance metric to be maximised or minimised.
-    threshold : float
+        (The default is True, which implies high values of f are better
+        than low values of f).
+    threshold : float, optional
         A minimum value where f >= threshold to be satisficed
-    accept_equal : bool
-        Changes the condition to > if False
+        (The default is 0.0, which implies that any f value above 0 is
+        of satisfactory performance).
+    accept_equal : bool, optional
+        Whether or not an f value equal to the threshold is acceptable.
+        (The default is True, which implies a >= comparison, whereas
+        False would imply a > comparison).
 
     Returns
     -------
-    np.ndarray, shape=(m, )
+    numpy.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
     _f = t1.satisfice(

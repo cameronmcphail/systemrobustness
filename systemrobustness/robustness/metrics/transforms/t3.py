@@ -126,9 +126,11 @@ def f_skew(f, reverse=False):
         percentiles, where the 10th percentile, q10, is f where only
         10% of f is worse than q10. If wanting the reverse of this,
         see arg 'reverse' below.
-    reverse : bool
+    reverse : bool, optional
         Reverses the skew calculation to have a preference for a
         larger tail of higher-performance values.
+        (The default is False, which implies it is best to have a skew
+        towards high f with a larger tail towards low f).
 
     Returns
     -------
