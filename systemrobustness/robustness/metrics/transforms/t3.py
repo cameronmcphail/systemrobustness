@@ -28,6 +28,26 @@ def f_mean(f):
     return R
 
 
+def f_range(f):
+    """Calculate robustness as range of f
+
+    Parameters
+    ----------
+    f : np.ndarray, shape=(m, n)
+        Transformed performance values to be maximised.
+        m decision alternatives and n scenarios
+
+    Returns
+    -------
+    np.ndarray, shape=(m, )
+        The robustness value for each of the m decision alternatives
+    """
+    max_f = np.max(f, axis=1)
+    min_f = np.min(f, axis=1)
+    R = max_f - min_f
+    return R
+
+
 def f_sum(f):
     """Calculate robustness as sum of f (/ n_scenarios)
 
@@ -123,8 +143,8 @@ def f_skew(f, reverse=False):
         Transformed performance values to be maximised.
         m decision alternatives and 3 scenarios.
         Those 3 scenarios must be (in order) the 10th, 50th and 90th
-        percentiles, where the 10th percentile, q10, is f where only
-        10% of f is worse than q10. If wanting the reverse of this,
+        percentiles, where the 10th percentile, p10, is f where only
+        10% of f is worse than p10. If wanting the reverse of this,
         see arg 'reverse' below.
     reverse : bool, optional
         Reverses the skew calculation to have a preference for a
@@ -137,18 +157,18 @@ def f_skew(f, reverse=False):
     np.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
-    # q10 < q50 < q90
-    q10 = f[:, 0]
-    q50 = f[:, 1]
-    q90 = f[:, 2]
-    # If q50 is closer to q90 than q10, most of the values are
+    # p10 < p50 < p90
+    p10 = f[:, 0]
+    p50 = f[:, 1]
+    p90 = f[:, 2]
+    # If p50 is closer to p90 than p10, most of the values are
     # skewed towards the higher-performance end of f
-    # i.e. If q50 > mu50, most values of f are skewed higher
+    # i.e. If p50 > mu50, most values of f are skewed higher
     if not reverse:
-        R = q50 - ((q90 + q10) / 2.)
+        R = p50 - ((p90 + p10) / 2.)
     else:
-        R = ((q90 + q10) / 2.) - q50
-    normaliser = (q90 - q10) / 2.
+        R = ((p90 + p10) / 2.) - p50
+    normaliser = (p90 - p10) / 2.
     R = np.divide(R, normaliser)
     return R
 
@@ -170,10 +190,10 @@ def f_kurtosis(f):
     np.ndarray, shape=(m, )
         The robustness value for each of the m decision alternatives
     """
-    # q10 < q25 < q75 < q90
-    q10 = f[:, 0]
-    q25 = f[:, 1]
-    q75 = f[:, 2]
-    q90 = f[:, 3]
-    R = np.divide((q90 - q10), (q75 - q25))
+    # p10 < p25 < p75 < p90
+    p10 = f[:, 0]
+    p25 = f[:, 1]
+    p75 = f[:, 2]
+    p90 = f[:, 3]
+    R = np.divide((p90 - p10), (p75 - p25))
     return R

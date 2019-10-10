@@ -66,6 +66,49 @@ def regret_from_best_da(f, maximise=True):
     return regret
 
 
+def satisficing_regret(f, threshold, maximise=True, accept_equal=True):
+    """T1: Satisficing regret
+
+    For a given decision alternative, this function compares its performance in
+    each scenario to a threshold (threshold can be different for each decision
+    alternative), and calculates the magnitude from the threshold (if it fails)
+    or returns 0 if it meets the threshold
+    Returns negative regret, so that from this point on,
+    the aim is to maximise the negative regret (towards 0).
+
+    Parameters
+    ----------
+    f : np.ndarray, shape=(m, n)
+        Performance values, f, for m decision alternatives
+        and n scenarios.
+    threshold : np.ndarray, shape=(n, ) or float
+        The values to compare the performance values to. i.e. The
+        values you would regret not getting, relative to f.
+        Can be a different value for each scenario or one value
+        across all scenarios.
+    maximise : bool
+        Is the performance metric to be maximised or minimised.
+        (The default is True, which implies high values of f are better
+        than low values of f).
+
+    Returns
+    -------
+    np.ndarray, shape=(m, n)
+        Transformed performance values, f', for m decision alternatives
+        and n scenarios
+    """
+    # Determine the regret for each solution in each scenario
+    # This will be a number with the aim to be maximised.
+    # If the solution has better performance than the threshold,
+    # then it will be a positive number
+    regret = regret_from_values(f, threshold, maximise=maximise)
+    # In satisficing regret, we only care about the magnitude of
+    # failure IF there is a failure. So any performances that are
+    # not failures are zeroed out.
+    regret[regret > 0.] = 0.
+    return regret
+
+
 def regret_from_values(f, values, maximise=True):
     """T1: Regret from given values
 
@@ -79,9 +122,11 @@ def regret_from_values(f, values, maximise=True):
     f : np.ndarray, shape=(m, n)
         Performance values, f, for m decision alternatives
         and n scenarios.
-    values : np.ndarray, shape=(n, )
+    values : np.ndarray, shape=(n, ) or float
         The values to compare the performance values to. i.e. The
         values you would regret not getting, relative to f.
+        Can be a different value for each scenario or one value
+        across all scenarios.
     maximise : bool
         Is the performance metric to be maximised or minimised.
         (The default is True, which implies high values of f are better
@@ -93,7 +138,13 @@ def regret_from_values(f, values, maximise=True):
         Transformed performance values, f', for m decision alternatives
         and n scenarios
     """
-    regret = np.subtract(f, values)
+    if isinstance(values, np.ndarray):
+        v = values
+    else:
+        # If values is not different for each scenario, then we must
+        # put it in the form of one value, repeated
+        v = np.repeat(values, f.shape[1])
+    regret = np.subtract(f, v)
     # Take into account whether f is to be minimised or maximised.
     regret = identity(regret, maximise=maximise)
     return regret

@@ -84,16 +84,16 @@ def test_minimax_regret():
     assert np.allclose(R, expected)
 
 
-def test_quantile_regret():
-    """Tests the quantile_regret fn"""
+def test_percentile_regret():
+    """Tests the percentile_regret fn"""
     f = np.asarray([
         [0.99, 1.0, 0.5],
         [0.69, 0.6, 0.6]])
-    R = common_metrics.quantile_regret(f, maximise=True, quantile=0.5)
+    R = common_metrics.percentile_regret(f, maximise=True, percentile=0.5)
     expected = np.asarray(
         [0.0, -0.3])
     assert np.allclose(R, expected)
-    R = common_metrics.quantile_regret(f, maximise=False, quantile=0.5)
+    R = common_metrics.percentile_regret(f, maximise=False, percentile=0.5)
     expected = np.asarray(
         [-0.3, 0.0])
     assert np.allclose(R, expected)
@@ -129,27 +129,27 @@ def test_undesirable_deviations():
     assert np.allclose(R, expected)
 
 
-def test_quantile_skew():
-    """Tests the quantile skew fn"""
+def test_percentile_skew():
+    """Tests the percentile skew fn"""
     f = np.asarray([
         [0.99, 1.0, 0.5],
         [0.69, 0.6, 0.61]])
-    R = common_metrics.quantile_skew(f, maximise=True)
+    R = common_metrics.percentile_skew(f, maximise=True)
     expected = np.asarray(
         [0.96, -0.777777777777779])
     assert np.allclose(R, expected)
-    R = common_metrics.quantile_skew(f, maximise=False)
+    R = common_metrics.percentile_skew(f, maximise=False)
     expected = np.asarray(
         [-0.96, 0.777777777777779])
     assert np.allclose(R, expected)
 
 
-def test_quantile_kurtosis():
-    """Tests the quantile kurtosis fn"""
+def test_percentile_kurtosis():
+    """Tests the percentile kurtosis fn"""
     f = np.asarray([
         [0.99, 1.0, 0.5, 0.52],
         [0.69, 0.6, 0.61, 1.0]])
-    R = common_metrics.quantile_kurtosis(f, maximise=True)
+    R = common_metrics.percentile_kurtosis(f, maximise=True)
     expected = np.asarray(
         [1.06382979, 5.0])
     assert np.allclose(R, expected)

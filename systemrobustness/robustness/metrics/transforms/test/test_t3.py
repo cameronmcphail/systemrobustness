@@ -15,6 +15,17 @@ def test_f_mean():
     assert np.allclose(R, expected)
 
 
+def test_f_range():
+    """Tests the f_range fn"""
+    f = np.asarray([
+        [0.99, 1.0, 0.5],
+        [0.69, 0.6, 0.6]])
+    R = t3.f_range(f)
+    expected = np.asarray(
+        [0.5, 0.09])
+    assert np.allclose(R, expected)
+
+
 def test_f_sum():
     """Tests the f_sum fn"""
     f = np.asarray([

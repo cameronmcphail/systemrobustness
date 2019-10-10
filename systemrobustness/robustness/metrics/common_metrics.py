@@ -205,8 +205,8 @@ def minimax_regret(f, maximise=True):
     return R
 
 
-def quantile_regret(f, maximise=True, quantile=0.1):
-    """Quantile regret metric
+def percentile_regret(f, maximise=True, percentile=0.1):
+    """percentile regret metric
 
     This is derived from the 90th percentile minimax regret metric
     (Herman et al., 2015) which itself is a variant of the minimax
@@ -215,7 +215,7 @@ def quantile_regret(f, maximise=True, quantile=0.1):
     metric, and thus this metric also is used to compare two or more
     decision alternatives rather than only looking at an individual
     decision alternative. The expected amount of regret for decision
-    alternative x_i is calculated using the kth quantile of regret
+    alternative x_i is calculated using the kth percentile of regret
     rather than the maximum possible regret.
 
     This metric is thus more sensitive to the overall distribution of
@@ -237,8 +237,8 @@ def quantile_regret(f, maximise=True, quantile=0.1):
         Is the performance metric to be maximised or minimised.
         (The default is True, which implies high values of f are better
         than low values of f).
-    quantile : float, optional
-        Which quantile of regret values to use.
+    percentile : float, optional
+        Which percentile of regret values to use.
         (The default is 0.1, which implies the use of the 10th
         percentile. That is the f value at which only 10% of f values
         (for a decision alternative) are worse).
@@ -249,7 +249,7 @@ def quantile_regret(f, maximise=True, quantile=0.1):
         The robustness value for each of the m decision alternatives
     """
     _f = t1.regret_from_best_da(f, maximise=maximise)
-    _f = t2.quantiles(_f, np.asarray([quantile]))
+    _f = t2.select_percentiles(_f, np.asarray([percentile]))
     R = t3.f_sum(_f)
     return R
 
@@ -329,8 +329,8 @@ def undesirable_deviations(f, maximise=True):
     return R
 
 
-def quantile_skew(f, maximise=True):
-    """A calculation of skew based on quantiles
+def percentile_skew(f, maximise=True):
+    """A calculation of skew based on percentiles
 
     The percentile-based skewness metric (Voudouris et al., 2014)
     considers the skewness of the distribution of performance values.
@@ -359,14 +359,14 @@ def quantile_skew(f, maximise=True):
     _f = t1.identity(f, maximise=maximise)
     # This calculation of skew relies on the 10th, 50th and 90th
     # percentiles.
-    quantiles = np.asarray([0.1, 0.5, 0.9])
-    _f = t2.quantiles(_f, quantiles)
+    percentiles = np.asarray([0.1, 0.5, 0.9])
+    _f = t2.select_percentiles(_f, percentiles)
     R = t3.f_skew(_f)
     return R
 
 
-def quantile_kurtosis(f, maximise=True):
-    """A calculation of kurtosis based on quantiles
+def percentile_kurtosis(f, maximise=True):
+    """A calculation of kurtosis based on percentiles
 
     A variation of Kurtosis was applied by Voudouris et al. (2014) to
     determine robustness. This metric indicates the “peakedness” of
@@ -396,8 +396,8 @@ def quantile_kurtosis(f, maximise=True):
     _f = t1.identity(f, maximise=maximise)
     # This calculation of skew relies on the 10th, 50th and 90th
     # percentiles.
-    quantiles = np.asarray([0.1, 0.25, 0.75, 0.9])
-    _f = t2.quantiles(_f, quantiles)
+    percentiles = np.asarray([0.1, 0.25, 0.75, 0.9])
+    _f = t2.select_percentiles(_f, percentiles)
     R = t3.f_kurtosis(_f)
     return R
 

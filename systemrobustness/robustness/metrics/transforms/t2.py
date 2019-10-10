@@ -105,16 +105,16 @@ def worst_half(f):
     return _f
 
 
-def quantiles(f, quantiles):
-    """Select particular quantiles of f for each decision alternative.
+def select_percentiles(f, percentiles):
+    """Select particular percentiles of f for each decision alternative.
 
     Parameters
     ----------
     f : np.ndarray, shape=(m, n)
         Transformed performance values to be maximised.
         m decision alternatives and n scenarios
-    quantiles : np.ndarray, shape=(n', ), dtype=float
-        Which quantile of to select for each decision alternative.
+    percentiles : np.ndarray, shape=(n', ), dtype=float
+        Which percentile of to select for each decision alternative.
         E.g. [0.2, 0.75] would get the 20th and 75th percentiles for
         each decision alternative. That is to say, the f values for
         each decision alternative where 20% and 75% of values are
@@ -126,5 +126,6 @@ def quantiles(f, quantiles):
         The selected n' performance values
         n' is given by the percentiles parameter
     """
-    _f = np.transpose(np.quantile(f, quantiles, axis=1, interpolation='nearest'))
+    _f = np.transpose(
+        np.quantile(f, percentiles, axis=1, interpolation='nearest'))
     return _f

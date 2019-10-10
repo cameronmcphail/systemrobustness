@@ -62,14 +62,14 @@ def test_worst_half():
     assert np.allclose(_f, expected)
 
 
-def test_quantiles():
+def test_percentiles():
     """Tests the worst_half fn"""
     f = np.asarray([
         [0.99, 1.0, 0.5, 0.2],
         [0.69, 0.6, 0.6, 0.2]])
-    quantiles = np.asarray(
+    percentiles = np.asarray(
         [0.25, 0.99])
-    _f = t2.quantiles(f, quantiles)
+    _f = t2.select_percentiles(f, percentiles)
     expected = np.asarray([
         [0.5, 1.0],
         [0.6, 0.69]])
