@@ -1,6 +1,7 @@
 
 # VS Code ignores
 **/.pytest_cache
+**/.vscode
 *.pyc
 
 # Distribution ignores
