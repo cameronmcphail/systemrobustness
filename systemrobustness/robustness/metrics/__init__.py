@@ -11,4 +11,5 @@ from .common_metrics import (
     percentile_skew,
     percentile_kurtosis,
     starrs_domain)
+from .custom_metrics import custom_R_metric, guidance_to_R
 from .transforms import t1, t2, t3

@@ -62,7 +62,7 @@ def test_worst_half():
     assert np.allclose(_f, expected)
 
 
-def test_percentiles():
+def percentiles():
     """Tests the worst_half fn"""
     f = np.asarray([
         [0.99, 1.0, 0.5, 0.2],
