@@ -66,7 +66,7 @@ def regret_from_best_da(f, maximise=True):
     return regret
 
 
-def satisficing_regret(f, threshold, maximise=True, accept_equal=True):
+def satisficing_regret(f, threshold, maximise=True):
     """T1: Satisficing regret
 
     For a given decision alternative, this function compares its performance in

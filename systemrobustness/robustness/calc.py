@@ -1,9 +1,6 @@
 """Helper functions for calculating robustness from performance values"""
 
 import numpy as np
-import pandas as pd
-
-from metrics import t1, t2, t3, custom_R_metric, guidance_to_R
 
 
 def f_to_R(f_df, R_dict):
@@ -30,13 +27,19 @@ def f_to_R(f_df, R_dict):
             the corresponding performance metric to use
         'maximise': bool
             whether the aim of that performance metric is to be maximised
+        'threshold': None or string
+            the name of the column in `f_df` containing thresholds
+            OR None if not using a threshold or threshold is given in kwargs
         'func': func
             the robustness metric function
-        'kws': list of string
-            a list of keyword arguments required for calculating R
+        'kwargs': dict
+            keyword arguments required for calculating R
+            e.g. {'t1_kwargs': {'threshold': 5.2}}
+                 would pass a threshold kwarg to the t1 transformation
+                 if using the custom_R_metric
         Note that all performance metric names must be listed here.
-        E.g. `{'<R1_name>': {'f': <f1_name>, 'maximise': <bool>, 'func': <func>, 'kws': [<kw1>, <kw2>, ...]},
-               '<R2_name>': {'f': <f1_name>, 'maximise': <bool>, 'func': <func>, 'kws': [<kw1>, <kw2>, ...]}, ...}`
+        E.g. `{'<R1_name>': {'f': <f1_name>, 'maximise': <bool>, 'threshold': None, 'func': <func>, 'kwargs': {'kwarg1': <arg>}},
+               '<R2_name>': {'f': <f1_name>, 'maximise': <bool>, 'threshold': 'critical', 'func': <func>, 'kwargs': {}}, ...}`
 
     Returns
     -------
@@ -65,11 +68,13 @@ def f_to_R(f_df, R_dict):
     for R_metric in R_dict:
         f_metric = R_dict[R_metric]['f']
         # Check that required data exists
-        kwargs = {}
-        for kw in R_dict[R_metric]['kws']:
-            assert kw in df_cols
-            kwargs[kw] = np.reshape(
-                f_df.iloc[:, f_df.columns.get_loc(kw)].values,
+        kwargs = R_dict[R_metric]['kwargs']
+        if R_dict[R_metric]['threshold'] is not None:
+            assert R_dict[R_metric]['threshold'] in df_cols
+            if 't1_kwargs' not in kwargs:
+                kwargs['t1_kwargs'] = {}
+            kwargs['t1_kwargs']['threshold'] = np.reshape(
+                f_df.iloc[:, f_df.columns.get_loc(R_dict[R_metric]['threshold'])].values,
                 newshape=(l_idxs.size, s_idxs.size))
         f = np.reshape(
             f_df.iloc[:, f_df.columns.get_loc(f_metric)].values,
@@ -77,7 +82,6 @@ def f_to_R(f_df, R_dict):
         kwargs['maximise'] = R_dict[R_metric]['maximise']
         R[R_metric] = R_dict[R_metric]['func'](f, **kwargs)
     return R
-
 
 
 def sort_f_df(f_df):
@@ -130,31 +134,3 @@ def get_f_df_details(f_df):
         assert np.allclose(relevant_l_idxs, l_idxs)
 
     return s_idxs, l_idxs
-
-
-if __name__ == '__main__':
-    df = pd.DataFrame.from_dict({
-        's_idx': [0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2],
-        'l_idx': [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-        'return': [-4, 4, 12, -2, 3, 8, 3, 2, 1, 3, 3, 3]
-    })
-    info = {
-        'Maximin': {
-            'f': 'return',
-            'maximise': True,
-            'func': custom_R_metric(t1.identity, t2.worst_case, t3.f_mean),
-            'kws': []},
-        'Minimax regret': {
-            'f': 'return',
-            'maximise': True,
-            'func': custom_R_metric(t1.regret_from_best_da, t2.worst_case, t3.f_mean),
-            'kws': []},
-        'Custom R': {
-            'f': 'return',
-            'maximise': True,
-            'func': guidance_to_R(),
-            'kws': []}
-    }
-    R = f_to_R(df, info)
-
-    x = 42

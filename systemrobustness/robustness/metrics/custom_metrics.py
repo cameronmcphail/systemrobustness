@@ -58,6 +58,7 @@ class custom_R_metric:
 
 
 def callable_transformation(transformation, kwargs):
+    """Allows kwargs to be given to transformation before calling it."""
     func = lambda f: transformation(f, **kwargs)
     return func
 
@@ -85,7 +86,7 @@ def guidance_to_R():
         threshold = input()
         if threshold not in ['y', 'n']:
             print('\nError: answer must be "y" or "n".')
-    
+
     most_important = ''
     if threshold == 'n':
         while most_important not in ['a', 'b']:
@@ -109,7 +110,7 @@ def guidance_to_R():
         else:
             t1_func = t1.satisfice
             t3_func = t3.f_mean
-    
+
     indication_of_f = ''
     if t3_func is None:
         while indication_of_f not in ['a', 'b']:
@@ -121,7 +122,7 @@ def guidance_to_R():
             t3_func = t3.f_mean
         else:
             t3_func = t3.f_range
-    
+
     if indication_of_f in ['', 'b']:
         print('\nSelect an upper and lower percentile to reflect the level of risk aversion/tolerance.')
         print('(i.e. between 0%% and 100%% reflecting maximum risk aversion and maximum risk tolerance, respectively).')
