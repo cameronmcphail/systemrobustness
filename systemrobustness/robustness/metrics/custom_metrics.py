@@ -42,7 +42,7 @@ class custom_R_metric:
 
         Returns
         -------
-        numpy.ndarray, shape=(m, )
+        numpy.ndarray, shape=(m, ) OR float if m=1
             The robustness value for each of the m decision alternatives
         """
         if t1_kwargs is None:
@@ -54,6 +54,8 @@ class custom_R_metric:
         transformed_f = self.t1_func(f, maximise=maximise, **t1_kwargs)
         selected_f = self.t2_func(transformed_f, **t2_kwargs)
         R = self.t3_func(selected_f, **t3_kwargs)
+        if R.shape[0] == 1:
+            R = R[0]
         return R
 
 

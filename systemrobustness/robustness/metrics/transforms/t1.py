@@ -35,7 +35,8 @@ def identity(f, maximise=True):
         Transformed performance values, f', for m decision alternatives
         and n scenarios
     """
-    return f if maximise else -f
+    _f = _prepare_f(f)
+    return _f if maximise else -_f
 
 
 def regret_from_best_da(f, maximise=True):
@@ -60,7 +61,8 @@ def regret_from_best_da(f, maximise=True):
         Transformed performance values, f', for m decision alternatives
         and n scenarios
     """
-    _f = identity(f, maximise=maximise)
+    _f = _prepare_f(f)
+    _f = identity(_f, maximise=maximise)
     best_decision_alternatives = np.amax(_f, axis=0)
     regret = _f - best_decision_alternatives
     return regret
@@ -97,11 +99,12 @@ def satisficing_regret(f, threshold, maximise=True):
         Transformed performance values, f', for m decision alternatives
         and n scenarios
     """
+    _f = _prepare_f(f)
     # Determine the regret for each solution in each scenario
     # This will be a number with the aim to be maximised.
     # If the solution has better performance than the threshold,
     # then it will be a positive number
-    regret = regret_from_values(f, threshold, maximise=maximise)
+    regret = regret_from_values(_f, threshold, maximise=maximise)
     # In satisficing regret, we only care about the magnitude of
     # failure IF there is a failure. So any performances that are
     # not failures are zeroed out.
@@ -138,13 +141,14 @@ def regret_from_values(f, values, maximise=True):
         Transformed performance values, f', for m decision alternatives
         and n scenarios
     """
+    _f = _prepare_f(f)
     if isinstance(values, np.ndarray):
         v = values
     else:
         # If values is not different for each scenario, then we must
         # put it in the form of one value, repeated
-        v = np.repeat(values, f.shape[1])
-    regret = np.subtract(f, v)
+        v = np.repeat(values, _f.shape[1])
+    regret = np.subtract(_f, v)
     # Take into account whether f is to be minimised or maximised.
     regret = identity(regret, maximise=maximise)
     return regret
@@ -177,8 +181,9 @@ def regret_from_median(f, maximise=True):
         Transformed performance values, f', for m decision alternatives
         and n scenarios
     """
-    median_f = np.median(f, axis=1, keepdims=True)
-    regret = np.subtract(f, median_f)
+    _f = _prepare_f(f)
+    median_f = np.median(_f, axis=1, keepdims=True)
+    regret = np.subtract(_f, median_f)
     regret = identity(regret, maximise=maximise)
     return regret
 
@@ -210,8 +215,32 @@ def satisfice(f, maximise=True, threshold=0.0, accept_equal=True):
         Transformed performance values, f', for m decision alternatives
         and n scenarios
     """
-    _f = identity(f, maximise=maximise)
+    _f = _prepare_f(f)
+    _f = identity(_f, maximise=maximise)
     c = threshold if maximise else -threshold
     _f = _f >= c if accept_equal else _f > c
     _f = np.where(_f, 1., 0.)
+    return _f
+
+
+def _prepare_f(f):
+    """Ensures f is in the right form for t1 transformations.
+
+    Converts to an np.ndarray if it isn't already.
+    If is of shape (n, ), it converts it to shape (1, n)
+    Parameters
+    ----------
+    f : np.ndarray, shape=(m, n)
+        Performance values, f, for m decision alternatives
+        and n scenarios.
+
+    Returns
+    -------
+    np.ndarray, shape=(m, n)
+        Performance values, f, for m decision alternatives
+        and n scenarios.
+    """
+    _f = f if isinstance(f, np.ndarray) else np.asarray(f)
+    if len(_f.shape) != 2:
+        _f = np.reshape(_f, newshape=(1, -1))
     return _f
