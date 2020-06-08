@@ -39,8 +39,8 @@ course would be to invest in bonds. ...
 
 import pandas as pd
 
-from systemrobustness.robustness.metrics import t1, t2, t3, custom_R_metric, guidance_to_R
-from systemrobustness.robustness.calc import f_to_R
+from systemrobustness.robustness.metrics import t1, t2, t3, custom_R_metric
+from systemrobustness.robustness.evaluator import f_to_R
 
 
 def investment_simple_example():

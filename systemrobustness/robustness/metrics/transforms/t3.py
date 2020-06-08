@@ -10,6 +10,24 @@ or higher-order moments of f.
 import numpy as np
 
 
+def f_identity(f):
+    """Identity transform included for completeness.
+
+    Parameters
+    ----------
+    f : np.ndarray, shape=(m, 1)
+        Transformed performance values to be maximised.
+        m decision alternatives and n scenarios
+
+    Returns
+    -------
+    np.ndarray, shape=(m, )
+        The robustness value for each of the m decision alternatives
+    """
+    R = np.reshape(f, newshape=(-1, ))
+    return R
+
+
 def f_mean(f):
     """Calculate robustness as mean of f
 
